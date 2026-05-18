@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>熊梓怡天天开心</title>
+  <style>
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      min-height: 100vh;
+      background: #f5f5f5;
+      overflow-x: hidden;
+     
+      background-image: radial-gradient(#e0e0e0 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    
+    .welcome-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000; 
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.5s ease;
+    }
+
+    .welcome-modal.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 40px 24px;
+      border-radius: 20px;
+      max-width: 90%;
+      width: 340px;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      transform: translateY(20px);
+      transition: transform 0.5s ease;
+    }
+
+    .welcome-modal.show .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-title {
+      font-family: "微软雅黑", "Microsoft YaHei", sans-serif;
+      font-size: 22px;
+      color: #ff6b8b;
+      margin-bottom: 18px;
+    }
+
+    .modal-message {
+      font-family: "微软雅黑", "Microsoft YaHei", sans-serif;
+      font-size: 17px;
+      color: #333;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .modal-btn {
+      background-color: #ff6b8b;
+      color: white;
+      border: none;
+      padding: 14px 35px;
+      border-radius: 30px;
+      font-size: 17px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: "微软雅黑", "Microsoft YaHei", sans-serif;
+      min-height: 48px;
+    }
+
+    .modal-btn:active {
+      transform: scale(0.95);
+      background-color: #ff4d75;
+    }
+
+    
+    .message-box {
+      position: fixed;
+      padding: 14px 18px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      font-family: "微软雅黑", "Microsoft YaHei", sans-serif;
+      font-size: 15px;
+      color: #333;
+      z-index: 9999;
+      cursor: pointer;
+      transition: all 0.5s ease;
+      opacity: 0;
+      max-width: 85%;
+      word-break: break-word;
+      line-height: 1.4;
+    }
+
+    
+    .message-box.fade-out {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+
+   
+    .message-box:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="welcome-modal">
+    <div class="modal-content">
+      <h3 class="modal-title">欢迎小怡OvO来到这里</h3>
+      <p class="modal-message">愿这里的每一句话，都能带给你温暖和快乐~</p>
+      <button class="modal-btn">开始接收祝福</button>
+    </div>
+  </div>
+
+  <script>
+    // 温馨语录列表
+    const messages = [
+      "小怡多喝热水哦~", "小怡保持微笑呀", "小怡每天都要元气满满",
+      "小怡记得吃水果", "小怡保持好心情", "小怡好好爱自己",
+      "小怡梦想成真", "小怡顺顺利利",
+      "小怡早点休息", "愿小怡所有烦恼都消失", "小怡少熬夜",
+      "小怡今天过得开心吗", "小怡记得多穿衣服", "小怡天天开心",
+	"小怡别给自己太大压力","小怡好运常伴左右","小怡烦恼都绕着走","小怡别忘记好好吃饭",
+	"小怡要要好好照顾自己","小怡今天也要甜甜的","小怡愿你每天都有好运气","小怡愿你身边都是温暖的人",
+"小怡愿你事事皆顺意","小怡愿你被世界温柔以待","小怡愿你每天都有小确幸","小怡今天也要闪闪发光呀","小怡愿你所有努力都有回报",
+"小怡别熬夜啦早点睡哦","小怡要多给自己一点耐心","小怡愿你烦恼都烟消云散","小怡愿你想要的都能如约而至"
+    ];
+
+    
+    const bgColors = [
+      '#FFEFD5', '#FFDAB9', '#F0E68C', '#E6E6FA', '#D8BFD8',
+      '#B0E2FF', '#98FB98', '#FFB6C1', '#87CEFA', '#9ACD32',
+      '#F0FFF0', '#FAF0E6', '#F5F5DC', '#FFF0F5', '#E0FFFF'
+    ];
+
+    
+    const textColors = [
+      '#8B4513', '#4682B4', '#2E8B57', '#8A2BE2', '#CD5C5C',
+      '#006400', '#8B0000', '#483D8B', '#008B8B', '#DAA520'
+    ];
+
+    
+    function createMessageBox() {
+      
+      const box = document.createElement('div');
+      box.className = 'message-box';
+
+      
+      box.innerText = messages[Math.floor(Math.random() * messages.length)];
+      box.style.backgroundColor = bgColors[Math.floor(Math.random() * bgColors.length)];
+      box.style.color = textColors[Math.floor(Math.random() * textColors.length)];
+
+      
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+      
+      const boxWidth = 180;
+      const boxHeight = 60;
+      const x = Math.random() * Math.max(10, screenWidth - boxWidth - 20) + 10;
+      const y = Math.random() * Math.max(10, screenHeight - boxHeight - 80) + 60;
+      box.style.left = `${x}px`;
+      box.style.top = `${y}px`;
+
+     
+      document.body.appendChild(box);
+
+      
+      setTimeout(() => {
+        box.style.opacity = '0.95';
+      }, 10);
+
+     
+      box.addEventListener('click', () => {
+        box.classList.add('fade-out');
+        setTimeout(() => box.remove(), 500);
+      });
+
+     
+      setTimeout(() => {
+        box.classList.add('fade-out');
+        setTimeout(() => box.remove(), 800);
+      }, 6000);
+    }
+
+   
+    function createMultipleBoxes(count = 50, interval = 200) {
+      for (let i = 0; i < count; i++) {
+        setTimeout(createMessageBox, i * interval);
+      }
+    }
+
+    
+    const welcomeModal = document.querySelector('.welcome-modal');
+    const modalBtn = document.querySelector('.modal-btn');
+
+    
+    let hasStarted = false;
+
+    window.onload = () => {
+      setTimeout(() => {
+        welcomeModal.classList.add('show');
+      }, 300);
+    };
+
+    
+    modalBtn.addEventListener('click', () => {
+      welcomeModal.classList.remove('show');
+
+      setTimeout(() => {
+        if (!hasStarted) {
+          hasStarted = true;
+          createMultipleBoxes(100, 50);
+        }
+      }, 500);
+    });
+
+    
+    window.addEventListener('resize', () => {
+      document.querySelectorAll('.message-box').forEach(box => box.remove());
+
+      if (hasStarted) {
+        createMultipleBoxes(100, 50);
+      }
+    });
+  </script>
+</body>
+</html>
